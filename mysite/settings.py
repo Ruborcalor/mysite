@@ -27,7 +27,7 @@ with open('/etc/colekillian.com-secret_key.txt') as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['http://157.245.140.109/']
+ALLOWED_HOSTS = ['157.245.140.109']
 
 
 INSTALLED_APPS = [
