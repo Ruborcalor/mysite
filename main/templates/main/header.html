@@ -50,16 +50,61 @@
 
 
 <body>
-  <nav style="width:87%">
-    <div class="nav-wrapper" style="background-color: white;">
-      <a href="/" class="brand-logo" style="color: black; position: relative; left: 11%;">cole killi(a)n it</a>
-      <ul id="nav-mobile" class="right">
-        <li><a href="/" style="color: black;">home</a></li>
-        <li><a href="/resume" style="color: black;">resume</a></li>
-        <li><a href="/blog" style="color: black;">blog</a></li>
-      </ul>
-    </div>
-  </nav>
+
+  <div class="row" style="width: 80%; position: relative; top: 25px;">
+      <div class="col s4">
+          <div class="card white darken-1">
+              <div class="card-panel black-text" style="padding:1px;">
+                  <p style="font-size: 30px; text-align: center;" >
+                    cole killi(a)n it
+                  </p>
+              </div>
+          </div>
+      </div>
+
+      <div class="col s2 offset-s2">
+          <div class="card white darken-1" style="width: 117px">
+              <div class="card-panel black-text" style="padding:1px;">
+                  <p style="font-size: 20px; text-align: center;">
+                    <a href="/" style="color: black;">home</a>                
+                  </p>
+              </div>
+          </div>
+      </div>
+      <div class="col s2">
+          <div class="card white darken-1" style="width: 117px">
+              <div class="card-panel black-text" style="padding:1px;">
+                  <p style="font-size: 20px; text-align: center;">
+                    <a href="/resume" style="color: black;">resume</a>                
+                  </p>
+              </div>
+          </div>
+      </div>
+      <div class="col s2">
+          <div class="card white darken-1" style="width: 117px">
+              <div class="card-panel black-text" style="padding:1px;">
+                  <p style="font-size: 20px; text-align: center">
+                    <a href="/blog" style="color: black;">blog</a>                
+                  </p>
+              </div>
+          </div>
+      </div>
+
+
+
+
+  </div>
+
+  {% comment %}<nav style="width:87%">{% endcomment %}
+    {% comment %}<div class="nav-wrapper" style="background-color: white;">{% endcomment %}
+      {% comment %}<a href="/" class="brand-logo" style="color: black; position: relative; left: 11%;">cole killi(a)n it</a>{% endcomment %}
+      {% comment %}<ul id="nav-mobile" class="right">{% endcomment %}
+        {% comment %}<li></li>{% endcomment %}
+        {% comment %}<li><a href="/resume" style="color: black;">resume</a></li>{% endcomment %}
+        {% comment %}<li><a href="/blog" style="color: black;">blog</a></li>{% endcomment %}
+      {% comment %}</ul>{% endcomment %}
+    {% comment %}</div>{% endcomment %}
+  {% comment %}</nav>{% endcomment %}
 
   {% block content %}
   {% endblock %}
