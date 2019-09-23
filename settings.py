@@ -25,7 +25,7 @@ with open('/etc/colekillian.com-secret_key.txt') as f:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['157.245.140.109', 'colekillian.com', 'localhost']
 
