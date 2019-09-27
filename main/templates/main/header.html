@@ -7,9 +7,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- For Responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
+
 <style>
+
+@media only screen and (min-width: 800px) {
+  #bodyrow {
+    top: 100px;
+    width: 80% !important
+  }
+
+  #big_screen_dividier {
+    height: 20% !important
+  }
+
+  #headerrow {
+    width: 80% !important
+  }
+}
+
  /* Style all font awesome icons */
 .fa {
   padding: 20px;
@@ -51,8 +71,8 @@
 
 <body>
 
-  <div class="row" style="width: 80%; position: relative; top: 25px;">
-      <div class="col s4">
+  <div id="headerrow" class="row" style="position: relative; top: 25px;">
+      <div class="col l4 s12">
           <div class="card white darken-1">
               <div class="card-panel black-text" style="padding:1px;">
                   <p style="font-size: 30px; text-align: center;" >
@@ -62,8 +82,8 @@
           </div>
       </div>
 
-      <div class="col s2 offset-s2">
-          <div class="card white darken-1" style="width: 117px">
+      <div class="col l2 s4 offset-l2">
+          <div class="card white darken-1" style="">
               <div class="card-panel black-text" style="padding:1px;">
                   <p style="font-size: 20px; text-align: center;">
                     <a href="/" style="color: black;">home</a>                
@@ -71,8 +91,8 @@
               </div>
           </div>
       </div>
-      <div class="col s2">
-          <div class="card white darken-1" style="width: 117px">
+      <div class="col l2 s4">
+          <div class="card white darken-1" style="">
               <div class="card-panel black-text" style="padding:1px;">
                   <p style="font-size: 20px; text-align: center;">
                     <a href="/resume" style="color: black;">resume</a>                
@@ -80,8 +100,8 @@
               </div>
           </div>
       </div>
-      <div class="col s2">
-          <div class="card white darken-1" style="width: 117px">
+      <div class="col l2 s4">
+          <div class="card white darken-1" style="">
               <div class="card-panel black-text" style="padding:1px;">
                   <p style="font-size: 20px; text-align: center">
                     <a href="/blog" style="color: black;">blog</a>                
