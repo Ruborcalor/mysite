@@ -22,4 +22,6 @@ urlpatterns = [
     path("", views.homepage, name="homepage"),
     path("resume/", views.resume, name="resume"),
     path("blog/", views.blog, name="blog"),
+    path("blog/<str:post>", views.blog_post, name="blog_post"),
+    
 ]

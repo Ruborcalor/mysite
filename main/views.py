@@ -12,4 +12,8 @@ def resume(request):
 
 def blog(request):
     return render(request=request,
-            template_name="main/blog.html")
+            template_name="main/lb/2019.html")
+
+def blog_post(request, post):
+    return render(request=request,
+            template_name="main/lb/blog/" + post)
