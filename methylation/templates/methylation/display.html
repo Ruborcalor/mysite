@@ -1,0 +1,294 @@
+{% extends "main/header.html" %}
+{% load static %}
+
+
+{% block imports %}
+
+<!-- Bootstrap core CSS -->
+<!--<link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<!-- Bootstrap core CSS -->
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">-->
+<!-- Material Design Bootstrap -->
+<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">-->
+
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>-->
+<!-- MDB core JavaScript -->
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<!--<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>-->
+<script src="https://d14fo0winaifog.cloudfront.net/plotly-basic.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Compiled and minified JavaScript for Materialize CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- For Responsiveness -->
+{% endblock %}
+
+
+{% block content %}
+<!-- Page Content -->
+<!--<div id="tester" style="width:600px;height:250px;"></div>-->
+<div class="container">
+
+        <div class="col l4 s12" style="margin-top: 90px;">
+          <div class="card white darken-1">
+              <div class="card-panel black-text" style="padding:1px;">
+                  <p style="font-size: 30px; text-align: center;" >
+                    Methylation Age Prediction Via Machine Learning
+                  </p>
+              </div>
+          </div>
+        </div>
+
+  <div class="row">
+
+
+
+
+    <div id="chart" class="chart" style="width:90%;height:700px"> </div>
+
+    <div>
+      <h3 id="real_age" class="col s6">Real Age: ?</h3>
+      <h3 id="pred_age" class="col s6">Predicted Age: ?</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s6" style="">
+      {% for cg in cgs %}
+
+      <!--<label for="customRange2">{{cg}}</label>-->
+      <div class="slider_holder" style="height: 25px; display: inline; vertical-align: middle;">
+        <label style="width:25%; position: relative; bottom:6px; color: black; font-size:17px;">{{cg}}</label>
+        <input type="range" class="custom-range" min="0" max="1" step="0.01" id="{{cg}}" style="width:75%; margin: auto;" oninput="toupdateHeat()" onchange="toupdateHeat()"> 
+      </div>
+      {% endfor %}
+    </div>
+    <div class="col s6" style="">
+      <div id="heatmap"></div>
+    </div>
+  </div>
+
+  <img src="{% static "methylation/heatmap19.jpg" %}" style="width:100%">
+</div>
+
+<!-- Bootstrap core JavaScript -->
+
+<!--<script src="static/vendor/jquery/jquery.slim.min.js"></script>-->
+<!--<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+
+<script>
+  var model;
+async function start() {
+  //arabic or english
+  //mode = cur_mode
+
+  //load the model 
+  //model = await tf.loadLayersModel('model2/model.json')
+  console.log("loading tf model");
+  model = await tf.loadLayersModel("{% static "methylation/model/model.json" %}")
+  console.log("loaded tf model");
+
+  //warm up 
+  //model.predict(tf.zeros([1, 28, 28, 1]))
+  //
+  ////allow drawing on the canvas 
+  //allowDrawing()
+
+  //load the class names
+  //await loadDict()
+}
+start();
+
+let cgs = ['cg16867657', 'cg06639320', 'cg22454769', 'cg21572722', 'cg24079702', 'cg14361627', 'cg19283806', 'cg24724428', 'cg07553761', 'cg11649376', 'cg23500537', 'cg26290632', 'cg16008966', 'cg00329615', 'cg07082267', 'cg04875128', 'cg07547549', 'cg08262002', 'cg08128734', 'cg25410668', 'cg17110586', 'cg14556683', 'cg16054275', 'cg00481951', 'cg06874016'];
+var myPlot = document.getElementById('chart');
+var graphs = {{plot | safe}};
+var layout = {
+  title: {
+    text:'Scatter Plot Predicted Age vs Predicted Age',
+    font: {
+      family: 'Courier New, monospace',
+      size: 24
+    },
+    xref: 'paper',
+  },
+  xaxis: {
+    title: {
+      text: 'Real Age',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    },
+  },
+  yaxis: {
+    title: {
+      text: 'Predicted Age',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    }
+  }
+};
+Plotly.plot('chart',graphs,layout);
+
+myPlot.on('plotly_click', function(data){
+  console.log("Click Point");
+  var pn='',
+    tn='',
+    colors=[];
+  for(var i=0; i < data.points.length; i++){
+        pn = data.points[i].pointNumber;
+        tn = data.points[i].curveNumber;
+        colors = data.points[i].data.marker.color;
+        };
+        for (let i = 0; i < colors.length; i++) {
+        colors[i] = 2;
+        }
+        colors[pn] = '#C54C82';
+
+        var update = {'marker':{color: colors, size:16}};
+        Plotly.restyle('chart', update, [tn]);
+        var pts = '';
+        var x = '';
+        var y = '';
+        var pointNumber = '';
+
+        for(var i=0; i < data.points.length; i++){
+        pts = '' + data.points[i].x + ' ' + data.points[i].y.toPrecision(4) + '';
+        x = data.points[i].x;
+        y = data.points[i].y.toPrecision(4);
+        pointNumber = data.points[i].pointNumber;
+        }
+        $("#real_age").html("Real Age: " + x);
+        $("#pred_age").html("Predicted Age: " + y);
+
+        console.log("About to make /click_point request");
+
+        $.ajax({
+        type : "POST",
+        url : '/methylation/click_point/',
+        dataType: "json",
+        data: JSON.stringify({"x": x, "y": y, "pointNumber": pointNumber}),
+        contentType: 'application/json;charset=UTF-8',
+        success: function (data) {
+        console.log(data);
+        for (let i = 0; i < data.methyl.length; i++) {
+        $("#" + cgs[i]).val(data.methyl[i])
+        }
+        updateHeat();
+
+
+        }
+        });
+        });
+
+        function updateHeat() {
+        methyl_trans = []
+        for (let i = 0; i < cgs.length; i++) {
+        methyl_trans.unshift([$("#" + cgs[i]).val()])
+        }
+
+        //console.log(methyl_trans)
+        var heatmap_data = [
+        {
+        z: methyl_trans,
+        type: 'heatmap',
+        colorscale: 'Hot',
+        }
+        ];
+
+        var layout = {
+        //title: {
+        //  text:'Heatmap of cg position methylation values',
+        //  font: {
+        //    family: 'Courier New, monospace',
+        //    size: 24
+        //  },
+        //  xref: 'paper',
+        //},
+        //yaxis: {
+        //  title: {
+        //    text: 'cg position',
+        //    font: {
+        //      family: 'Courier New, monospace',
+        //      size: 18,
+        //      color: '#7f7f7f'
+        //    }
+        //  }
+        //},
+        height: 680,
+        width: 450,
+        margin: {
+        l: 0,
+        r: 0,
+        b: 0,
+        t: 0,
+        pad: 0
+        },
+        autosize: false
+        };
+
+
+        Plotly.newPlot('heatmap', heatmap_data, layout);
+        }
+
+        updateHeat();
+
+        function toupdateHeat() {
+        $("#real_age").html("Real Age: ?")
+
+        updateHeat();
+
+        let knobs = [];
+        for( let i = 0; i < cgs.length ; i++) {
+        knobs.push(parseFloat($("#" + cgs[i]).val()));
+        }
+        console.log(knobs);
+
+
+        let a = tf.tensor(knobs);
+        const batched = a.expandDims(0)
+        // a = a.reshape([1, 19]);
+        console.log('shape:' + batched.shape);
+
+        console.log("predict")
+        const pred = Math.round(model.predict(batched).dataSync() * 100) / 100
+        console.log("Prediction" + pred)
+        $("#pred_age").html("Predicted Age: " + pred)
+
+        //$.ajax({
+        //    type : "POST",
+        //    url : '/model_predict',
+        //    dataType: "json",
+        //    data: JSON.stringify({"knobs": knobs}),
+        //    contentType: 'application/json;charset=UTF-8',
+        //    success: function (data) {
+        //        console.log(data);
+        //    }
+        //});
+
+        }
+</script>
+
+{% endblock %}
+
+
