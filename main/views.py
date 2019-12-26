@@ -16,4 +16,8 @@ def blog(request):
 
 def blog_post(request, post):
     return render(request=request,
-            template_name="main/lb/blog/" + post)
+            template_name="main/lb/blog/" + post + ".html")
+
+def rss(request):
+    return render(request=request,
+            template_name="main/lb/rss.xml")

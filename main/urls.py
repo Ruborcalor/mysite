@@ -20,6 +20,7 @@ app_name = "main"
 
 urlpatterns = [
     path("", views.homepage, name="homepage"),
+    path("rss.xml", views.rss, name="rss"),
     path("resume/", views.resume, name="resume"),
     path("blog/", views.blog, name="blog"),
     path("blog/<str:post>", views.blog_post, name="blog_post"),
