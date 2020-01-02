@@ -58,6 +58,19 @@
                   <p>
                     Context: The goal of this project was to train a neural network to predict a person's age based on their blood sample (more specifically the methylation profile of their blood sample). In order to achieve this I downloaded a dataset of 752 raw methylation profiles. Each of these profiles contains over 400,000 features. Training the neural network on every one of these features would lead to overfitting. Therefore I calculated the absolute correlation of each of these features with respect to human age, and selected the 25 most correlated features. After training the neural network on a training set, the model achieved 100% accuracy plus or minus 10 years and over 90% accuracy plus or minus 5 years on the test set.
                   </p>
+                  <p>
+                    Instructions:
+                    <ul>
+                      <li>
+                        Click a point on the scatter plot to populate the sliders with that samples values for each of the 25 selected features.
+                      </li>
+                      <li>
+                        Experiment with the sliders to better understand how the model's predicted age varies with them.
+                      </li>
+                      <li>
+                        The heatmap at the bottom of the page allows for a more visual understanding of the correlation between age and each of the 25 selected features (the x axis is sorted in ascending order with respect to age).
+                      </li>
+                    </ul>
               </div>
           </div>
         </div>
