@@ -32,7 +32,7 @@ def index(request):
         x = np_valid_real,
         y = np_valid_pred,
         mode='markers',
-        marker=dict(size=[16] * len(np_valid_real), color=[2] * len(np_valid_real))
+        marker=dict(size=[16] * len(np_valid_real), color=["red"] * len(np_valid_real))
     )
 
     data = [trace]

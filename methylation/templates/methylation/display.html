@@ -56,8 +56,9 @@
                     <a href="https://github.com/Ruborcalor/202mais">Github Link.</a>
                   </p>
                   <p>
-                    Context: The goal of this project was to train a neural network to predict a person's age based on their blood sample (more specifically the methylation profile of their blood sample). In order to achieve this I downloaded a dataset of 752 raw methylation profiles. Each of these profiles contains over 400,000 features. Training the neural network on every one of these features would lead to overfitting. Therefore I calculated the absolute correlation of each of these features with respect to human age, and selected the 25 most correlated features. After training the neural network on a training set, the model achieved 100% accuracy plus or minus 10 years and over 90% accuracy plus or minus 5 years on the test set.
+                    Context: The goal of this project was to train a neural network to predict a person's age based on their blood sample (more specifically the methylation profile of their blood sample). In order to achieve this I downloaded a dataset of 752 raw methylation profiles. Each of these profiles contains over 400,000 features. Training the neural network on every one of these features would lead to overfitting. Therefore I calculated the absolute correlation of each of these features with respect to human age, and selected the 25 most correlated features. After training the neural network on a training set, the model achieved 100% accuracy plus or minus 10 years and over 90% accuracy plus or minus 5 years on the test set. See the poster below for more information:
                   </p>
+		<iframe src="/static/methylation/Methylation_Poster.pdf" width="100%" height="600px">This browser does not support pdfs.</iframe>
                   <p>
                     Instructions:
                     <ul>
@@ -80,7 +81,10 @@
 
 
 
+
     <div id="chart" class="chart" style="width:90%;height:700px"> </div>
+
+    <!-- <img id="jpg-export"></img>-->
 
     <div>
       <h3 id="real_age" class="col s6">Real Age: ?</h3>
@@ -99,11 +103,11 @@
       {% endfor %}
     </div>
     <div class="col s6" style="">
-      <div id="heatmap"></div>
+      <div id="heatmap" class="heatmap" style="width:100%"></div>
     </div>
   </div>
 
-  <img src="{% static "methylation/heatmap19.jpg" %}" style="width:100%">
+  <img src="{% static "methylation/heatmap25.jpg" %}" style="width:100%">
 </div>
 
 <!-- Bootstrap core JavaScript -->
@@ -112,16 +116,19 @@
 <!--<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
 
 <script>
+
+// 	var d3 = Plotly.d3;
+// var img_jpg= d3.select('#jpg-export');
+
   var model;
-async function start() {
+
+	async function start() {
   //arabic or english
   //mode = cur_mode
 
   //load the model 
   //model = await tf.loadLayersModel('model2/model.json')
-  console.log("loading tf model");
   model = await tf.loadLayersModel("{% static "methylation/model/model.json" %}")
-  console.log("loaded tf model");
 
   //warm up 
   //model.predict(tf.zeros([1, 28, 28, 1]))
@@ -137,40 +144,75 @@ start();
 let cgs = ['cg16867657', 'cg06639320', 'cg22454769', 'cg21572722', 'cg24079702', 'cg14361627', 'cg19283806', 'cg24724428', 'cg07553761', 'cg11649376', 'cg23500537', 'cg26290632', 'cg16008966', 'cg00329615', 'cg07082267', 'cg04875128', 'cg07547549', 'cg08262002', 'cg08128734', 'cg25410668', 'cg17110586', 'cg14556683', 'cg16054275', 'cg00481951', 'cg06874016'];
 var myPlot = document.getElementById('chart');
 var graphs = {{plot | safe}};
+console.log({{plot | safe}});
 var layout = {
   title: {
-    text:'Scatter Plot Predicted Age vs Predicted Age',
+    text:'Predicted Age vs Real Age (Test Set)',
     font: {
       family: 'Courier New, monospace',
-      size: 24
+      // size: 24,
+      size: 35,
+	    color: 'black'
     },
+
+
     xref: 'paper',
   },
   xaxis: {
+	range: [5, 100],
     title: {
       text: 'Real Age',
       font: {
         family: 'Courier New, monospace',
-        size: 18,
-        color: '#7f7f7f'
-      }
+        // size: 18,
+        size: 30,
+        // color: '#7f7f7f'
+        color: 'black'
+      },
+
     },
+	  tickfont: {
+		        size: 20,
+		        color: 'black'
+		      },
   },
   yaxis: {
+	range: [5, 100],
     title: {
       text: 'Predicted Age',
       font: {
         family: 'Courier New, monospace',
-        size: 18,
-        color: '#7f7f7f'
-      }
-    }
+        // size: 18,
+        size: 30,
+        // color: '#7f7f7f'
+        color: 'black'
+      },
+    },
+	  tickfont: {
+		        size: 20,
+		        color: 'black'
+		      },
+
   }
 };
-Plotly.plot('chart',graphs,layout);
+Plotly.plot('chart',graphs,layout)
+
+// .then(
+// 	    function(gd)
+// 	     {
+// 		           Plotly.toImage(gd,{height:1000,width:1000})
+// 		              .then(
+// 				                   function(url)
+// 				               {
+// 						                    img_jpg.attr("src", url);
+// 						                    return Plotly.toImage(gd,{format:'jpeg',height:1000,width:1000});
+// 						                }
+// 				               )
+// 		         });
+
+// Plotly.newPlot('heatmap', heatmap_data, layout);
 
 myPlot.on('plotly_click', function(data){
-  console.log("Click Point");
   var pn='',
     tn='',
     colors=[];
@@ -180,12 +222,14 @@ myPlot.on('plotly_click', function(data){
         colors = data.points[i].data.marker.color;
         };
         for (let i = 0; i < colors.length; i++) {
-        colors[i] = 2;
+        colors[i] = "red";
         }
-        colors[pn] = '#C54C82';
+        colors[pn] = 'blue';
+        // colors[pn] = 'black';
 
         var update = {'marker':{color: colors, size:16}};
-        Plotly.restyle('chart', update, [tn]);
+        // Plotly.restyle('chart', update, [tn]);
+        Plotly.redraw('chart', update, [tn]);
         var pts = '';
         var x = '';
         var y = '';
@@ -200,7 +244,6 @@ myPlot.on('plotly_click', function(data){
         $("#real_age").html("Real Age: " + x);
         $("#pred_age").html("Predicted Age: " + y);
 
-        console.log("About to make /click_point request");
 
         $.ajax({
         type : "POST",
@@ -209,7 +252,6 @@ myPlot.on('plotly_click', function(data){
         data: JSON.stringify({"x": x, "y": y, "pointNumber": pointNumber}),
         contentType: 'application/json;charset=UTF-8',
         success: function (data) {
-        console.log(data);
         for (let i = 0; i < data.methyl.length; i++) {
         $("#" + cgs[i]).val(data.methyl[i])
         }
@@ -226,14 +268,31 @@ myPlot.on('plotly_click', function(data){
         methyl_trans.unshift([$("#" + cgs[i]).val()])
         }
 
-        //console.log(methyl_trans)
+	let colors = [
+		[0, 'rgb(0,0,255)'], 
+		[1, 'rgb(255,0,0)']
+	]
+
         var heatmap_data = [
-        {
-        z: methyl_trans,
-        type: 'heatmap',
-        colorscale: 'Hot',
-        }
+	{
+	z: methyl_trans,
+		zmin: 0,
+		zmax: 1,
+	type: 'heatmap',
+	colorscale: "Hot",
+	// showscale: false,
+	},
         ];
+
+	// var axisTemplate = {
+	// 	  range: [0, 1],
+	// 	  autorange: false,
+	// 	  // showgrid: false,
+	// 	  // zeroline: false,
+	// 	  // linecolor: 'black',
+	// 	  // showticklabels: false,
+	// 	  // ticks: ''
+	// };
 
         var layout = {
         //title: {
@@ -244,6 +303,7 @@ myPlot.on('plotly_click', function(data){
         //  },
         //  xref: 'paper',
         //},
+	// xaxis: axisTemplate,
         //yaxis: {
         //  title: {
         //    text: 'cg position',
@@ -255,7 +315,8 @@ myPlot.on('plotly_click', function(data){
         //  }
         //},
         height: 680,
-        width: 450,
+        // width: 450,
+	showscale: false,
         margin: {
         l: 0,
         r: 0,
@@ -263,11 +324,12 @@ myPlot.on('plotly_click', function(data){
         t: 0,
         pad: 0
         },
-        autosize: false
+        autosize: true,
         };
 
 
-        Plotly.newPlot('heatmap', heatmap_data, layout);
+        // Plotly.newPlot('heatmap', heatmap_data, layout);
+        Plotly.plot('heatmap', heatmap_data, layout);
         }
 
         updateHeat();
@@ -281,17 +343,13 @@ myPlot.on('plotly_click', function(data){
         for( let i = 0; i < cgs.length ; i++) {
         knobs.push(parseFloat($("#" + cgs[i]).val()));
         }
-        console.log(knobs);
 
 
         let a = tf.tensor(knobs);
         const batched = a.expandDims(0)
         // a = a.reshape([1, 19]);
-        console.log('shape:' + batched.shape);
 
-        console.log("predict")
         const pred = Math.round(model.predict(batched).dataSync() * 100) / 100
-        console.log("Prediction" + pred)
         $("#pred_age").html("Predicted Age: " + pred)
 
         //$.ajax({
@@ -306,6 +364,11 @@ myPlot.on('plotly_click', function(data){
         //});
 
         }
+	window.onresize = function() {
+		Plotly.Plots.resize("chart");
+		Plotly.Plots.resize("heatmap");
+	};
+
 </script>
 
 {% endblock %}
