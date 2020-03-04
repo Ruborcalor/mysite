@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.contrib.staticfiles.templatetags.staticfiles import static 
 from django.views.decorators.csrf import csrf_exempt
 
 # from flask import render_template, request
@@ -24,8 +25,8 @@ def index(request):
     cgs = ['cg16867657', 'cg06639320', 'cg22454769', 'cg21572722', 'cg24079702', 'cg14361627', 'cg19283806', 'cg24724428', 'cg07553761', 'cg11649376', 'cg23500537', 'cg26290632', 'cg16008966', 'cg00329615', 'cg07082267', 'cg04875128', 'cg07547549', 'cg08262002', 'cg08128734', 'cg25410668', 'cg17110586', 'cg14556683', 'cg16054275', 'cg00481951', 'cg06874016'];
 
 
-    np_valid_pred = np.load('/static/app/y_valid_pred.npy')
-    np_valid_real = np.load('/static/app/y_valid_real.npy')
+    np_valid_pred = np.load(static('/methylation/y_valid_pred.npy'))
+    np_valid_real = np.load(static('/methylation/y_valid_real.npy'))
 
     # Create a trace
     trace = go.Scatter(
@@ -83,7 +84,7 @@ def click_point(request):
         # cgs = list(set(cgs))
         print(cgs)
 
-        np_x_test = np.load('/static/app/X_test.npy')
+        np_x_test = np.load(static('/methylation/X_test.npy'))
         print(np_x_test[body['pointNumber']])
         return JsonResponse({
             'x': body["x"], 
